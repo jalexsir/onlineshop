@@ -6,8 +6,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.ModelAndView;
 import util.FormValidator;
 
@@ -20,8 +18,8 @@ import java.util.Map;
 public class ProfileController {
 
     @RequestMapping(method = RequestMethod.GET)
-    protected ModelAndView get(ModelAndView model) {
-        String login = (String) session().getAttribute("elogin");
+    protected ModelAndView get(ModelAndView model, HttpSession session) {
+        String login = (String) session.getAttribute("elogin");
         model.setViewName("pageProfile");
         User existedUser = DAOFactory.getInstance(1).getUserDAO().getUserByLogin(login);
         if (existedUser != null) {
@@ -35,9 +33,8 @@ public class ProfileController {
                                      @RequestParam(value = "region", required = false) String region,
                                      @RequestParam(value = "gender", required = false) String gender,
                                      @RequestParam(value = "comment", required = false) String comment,
-                                     @RequestParam(value = "agreement", required = false) String agreement
-    ) {
-        HttpSession session = session();
+                                     @RequestParam(value = "agreement", required = false) String agreement,
+                                     HttpSession session) {
         ModelAndView model = new ModelAndView();
         String login = (String) session.getAttribute("elogin");
 
@@ -56,12 +53,5 @@ public class ProfileController {
             model.setViewName("pageProfile");
         }
         return model;
-    }
-
-
-    //Util methods
-    public static HttpSession session() {
-        ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
-        return attr.getRequest().getSession(true);
     }
 }

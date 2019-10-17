@@ -19,12 +19,12 @@
                 <span>Discount</span>
                 <span class="total1">${(elogin!=null)?(summ*0.15):("0%") } ${(elogin!=null)?("$ (15%)"):""}</span>
                 <span>Delivery Charges</span>
-                <span class="total1">${summ!=0?(50.00):(0)} $</span>
+                <span class="total1">${summ!=null?(50.00):(0)} $</span>
                 <div class="clearfix"></div>
             </div>
             <ul class="total_price">
                 <li class="last_price"><h4>TOTAL</h4></li>
-                <li class="last_price"><span>${summ!=0?(summ+50-summ*0.15):(0)} $</span></li>
+                <li class="last_price"><span>${summ!=null?(summ+50-summ*0.15):(0)} $</span></li>
                 <div class="clearfix"></div>
             </ul>
             <div class="clearfix"></div>
@@ -130,6 +130,9 @@
             data: "productId=" + id + "&qnt=" + num,
             type: 'POST',
             url: "${pageContext.servletContext.contextPath}/cart",
+            success: function(mytest){
+                alert(mytest);  // you will see the data in alert, you can use it    anywhere
+            }
         });
     }
 </script>

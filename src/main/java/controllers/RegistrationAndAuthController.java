@@ -7,8 +7,6 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.ModelAndView;
 import util.FormValidator;
 
@@ -19,9 +17,8 @@ import java.util.Map;
 @RequestMapping("/registration")
 public class RegistrationAndAuthController {
     @RequestMapping(method = RequestMethod.GET)
-    public ModelAndView get() {
+    public ModelAndView get(HttpSession session) {
         ModelAndView model = new ModelAndView("pageRegistrationAndAuth");
-        HttpSession session = session();
         session.setAttribute("isReg", "reg");
         if (session.getAttribute("authLogin") != null && session.getAttribute("enteringError") != null) {
             model.addObject("authLogin", session.getAttribute("authLogin"));
@@ -34,9 +31,8 @@ public class RegistrationAndAuthController {
 
     @RequestMapping(method = RequestMethod.POST, params = "key=auth")
     public String authUser(ModelMap model, @RequestParam(value = "login", required = false) String login,
-                           @RequestParam(value = "password", required = false) String password) {
+                           @RequestParam(value = "password", required = false) String password, HttpSession session) {
         User user = null;
-        HttpSession session = session();
         if (login != null) {
             if (FormValidator.checkLoginAndPassword(login, password) &&
                     ((user = DAOFactory.getInstance(1).getUserDAO().
@@ -66,10 +62,9 @@ public class RegistrationAndAuthController {
                                      @RequestParam(value = "region", required = false) String region,
                                      @RequestParam(value = "gender", required = false) String gender,
                                      @RequestParam(value = "comment", required = false) String comment,
-                                     @RequestParam(value = "agreement", required = false) String agreement
-    ) {
+                                     @RequestParam(value = "agreement", required = false) String agreement,
+                                     HttpSession session) {
         ModelAndView model = new ModelAndView();
-        HttpSession session = session();
 
         if (session.getAttribute("isReg") != null) {
             session.removeAttribute("isReg");
@@ -87,11 +82,5 @@ public class RegistrationAndAuthController {
             model.addAllObjects(errorMap);
         }
         return model;
-    }
-
-    //Util methods
-    public static HttpSession session() {
-        ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
-        return attr.getRequest().getSession(true);
     }
 }

@@ -35,32 +35,33 @@
                             <h4>quantity :</h4>
 
                             <div class="quantity-block">
-                                <button class="quantity-arrow-minus" id="imgMinus" onclick="minus()"> -</button>
+                                <button class="quantity-arrow-minus" id="imgMinus" onclick="minus(${productById.id})"> -</button>
                                 <span class="raz" id="span">1</span>
-                                <button class="quantity-arrow-plus" id="imgPlus" onclick="plus()"> +</button>
+                                <button class="quantity-arrow-plus" id="imgPlus" onclick="plus(${productById.id})"> +</button>
                             </div>
 
                         </div>
                         <div class="btn_form">
-                            <a href="${pageContext.servletContext.contextPath}/cart"
-                               onclick="addToCart(${productById.id})">buy</a>
+                            <a href="${pageContext.servletContext.contextPath}/cart">buy</a>
                         </div>
                         <a href="${pageContext.servletContext.contextPath}/registration"><span>login to save in wishlist</span></a>
                         <script>
                             var number = 0;
 
-                            function plus() {
+                            function plus(id) {
                                 var number = document.getElementById("span").innerHTML;
                                 if (number < 10) {
                                     number++;
+                                    addToCart(id)
                                     document.getElementById("span").innerHTML = number;
                                 }
                             }
 
-                            function minus() {
+                            function minus(id) {
                                 var number = document.getElementById("span").innerHTML;
                                 if (number > 1) {
                                     number--;
+                                    addToCart(id)
                                     document.getElementById("span").innerHTML = number;
                                 }
                             }
@@ -72,6 +73,10 @@
                                     data: "productId=" + id + "&qnt=" + num,
                                     type: 'POST',
                                     url: "${pageContext.servletContext.contextPath}/cart",
+                                    success : function(response){
+                                       /* value = response.company;*/
+                                        console.log(response)
+                                    }
                                 });
                             }
                         </script>
